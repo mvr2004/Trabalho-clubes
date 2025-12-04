@@ -4,153 +4,350 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center">Lista de Clubes</h1>
+    <h1 class="text-center mb-4">Lista de Clubes</h1>
     
     <!-- Barra de Pesquisa -->
-    <div class="mb-3">
-        <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar por nome do clube..." onkeyup="filtrarPorNome()">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-3">
+            <div class="input-group">
+                <span class="input-group-text bg-primary text-white border-0">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control border-0" 
+                       placeholder="Pesquisar por nome do clube..." onkeyup="filtrarPorNome()">
+            </div>
+        </div>
     </div>
 
-    <div class="text-end mb-3">
-        <a href="{% url 'adicionar_clube' %}" class="btn btn-primary">Adicionar Clube</a>
-        <a href="{% url 'listar_equipas' %}" class="btn btn-info">Ver Equipas</a>
+    <!-- Botões de Ação -->
+    <div class="d-flex flex-wrap gap-3 justify-content-end mb-4">
+        <a href="{% url 'adicionar_clube' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Adicionar Clube
+        </a>
+        <a href="{% url 'listar_equipas' %}" class="btn btn-info">
+            <i class="bi bi-people me-2"></i>Ver Equipas
+        </a>
     </div>
     
+    <!-- Mensagens -->
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} 
+                         alert-dismissible fade show border-0 shadow-sm" role="alert">
+                <i class="bi {% if message.tags == 'error' %}bi-exclamation-triangle{% else %}bi-check-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
     {% if clubes %}
-	{% if messages %}
-		{% for message in messages %}
-			<div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
-				{{ message }}
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-		{% endfor %}
-	{% endif %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover" id="clubesTabela">
-            <thead class="table-dark">
-                <tr>
-                    <th>Nome</th>
-                    <th>Ano Fundação</th>
-                    <th>Localidade</th>
-                    <th>Estado</th>
-                    <th>Associação & Estádio</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for clube in clubes %}
-                <tr class="clube-item" data-clube-nome="{{ clube.nome|lower }}">
-                    <td>{{ clube.nome }}</td>
-                    <td>{{ clube.ano_fundacao }}</td>
-                    <td>{{ clube.pais }}, {{ clube.cidade }}</td>
-                    <td>
-                        {{ clube.estado }}
-                        {% if clube.estado == "Extinto" %}
-                            <br>{{ clube.ano_extinto }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if clube.associacao %}
-                            {{ clube.associacao.nome }}
-                            {% if clube.estadio %}<br>{% endif %}
-                        {% endif %}
-                        {% if clube.estadio %}
-                            {{ clube.estadio.nome }}
-                        {% else %}
-                            {% if not clube.associacao %}
-                                Sem associação nem estádio
-                            {% endif %}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'detalhes_clube' clube.get_id %}" class="btn btn-info btn-sm me-2">Ver</a>
-                        <a href="{% url 'editar_clube' clube.get_id %}" class="btn btn-warning btn-sm me-2">Editar</a>
-                        
-                        <!-- Botão para abrir o modal -->
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ clube.get_id }}">
-                            Apagar
-                        </button>
+    <div class="card shadow border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" id="clubesTabela">
+                    <thead style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
+                        <tr>
+                            <th class="text-white border-0">Nome</th>
+                            <th class="text-white border-0">Ano Fundação</th>
+                            <th class="text-white border-0">Localidade</th>
+                            <th class="text-white border-0">Estado</th>
+                            <th class="text-white border-0">Associação & Estádio</th>
+                            <th class="text-white border-0">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for clube in clubes %}
+                        <tr class="clube-item align-middle" data-clube-nome="{{ clube.nome|lower }}">
+                            <td class="fw-bold">{{ clube.nome }}</td>
+                            <td>{{ clube.ano_fundacao }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-geo-alt text-primary me-2"></i>
+                                    {{ clube.cidade }}, {{ clube.pais }}
+                                </div>
+                            </td>
+                            <td>
+                                {% if clube.estado == "Extinto" %}
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-x-circle me-1"></i>Extinto
+                                    </span>
+                                    <br><small class="text-muted">{{ clube.ano_extinto }}</small>
+                                {% else %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>Ativo
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if clube.associacao %}
+                                    <div class="mb-1">
+                                        <i class="bi bi-building text-primary me-1"></i>
+                                        {{ clube.associacao.nome }}
+                                    </div>
+                                {% endif %}
+                                {% if clube.estadio %}
+                                    <div>
+                                        <i class="bi bi-stadium text-primary me-1"></i>
+                                        {{ clube.estadio.nome }}
+                                    </div>
+                                {% endif %}
+                                {% if not clube.associacao and not clube.estadio %}
+                                    <span class="text-muted">
+                                        <i class="bi bi-info-circle me-1"></i>Sem associação nem estádio
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'detalhes_clube' clube.get_id %}" class="btn btn-info btn-sm me-1">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'editar_clube' clube.get_id %}" class="btn btn-warning btn-sm me-1">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal{{ clube.get_id }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="deleteModal{{ clube.get_id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ clube.get_id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title" id="deleteModalLabel{{ clube.get_id }}">Confirmar Exclusão</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Tem certeza de que deseja apagar o clube <strong>{{ clube.nome }}</strong> ({{ clube.ano_fundacao }})?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form method="post" action="{% url 'apagar_clube' clube.get_id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Apagar</button>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        </form>
+                                <!-- Modal de Exclusão -->
+                                <div class="modal fade" id="deleteModal{{ clube.get_id }}" tabindex="-1" 
+                                     aria-labelledby="deleteModalLabel{{ clube.get_id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content border-0 shadow">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ clube.get_id }}">
+                                                    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Exclusão
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" 
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Tem certeza de que deseja apagar o clube 
+                                                <strong class="text-danger">{{ clube.nome }}</strong> ({{ clube.ano_fundacao }})?
+                                                <div class="alert alert-warning mt-3 mb-0 p-2">
+                                                    <small><i class="bi bi-info-circle me-1"></i>
+                                                    Esta ação não pode ser desfeita.</small>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form method="post" action="{% url 'apagar_clube' clube.get_id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="bi bi-trash me-1"></i>Apagar
+                                                    </button>
+                                                    <button type="button" class="btn btn-secondary" 
+                                                            data-bs-dismiss="modal">Cancelar</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     {% else %}
-    <div class="alert alert-info text-center">
-        Nenhum clube encontrado.
+    <div class="card shadow border-0">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-trophy text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">Nenhum clube encontrado</h4>
+            <p class="text-muted mb-4">Não existem clubes registrados no momento.</p>
+            <a href="{% url 'adicionar_clube' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Adicionar Primeiro Clube
+            </a>
+        </div>
     </div>
     {% endif %}
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Script para filtrar clubes pelo nome -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    function filtrarPorNome() {
-        let searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        let clubes = document.querySelectorAll(".clube-item");
-
-        clubes.forEach(clube => {
-            let clubeNome = clube.getAttribute("data-clube-nome").toLowerCase();
-
-            if (clubeNome.includes(searchTerm)) {
-                clube.classList.remove("d-none"); // Mostrar clube
-            } else {
-                clube.classList.add("d-none"); // Esconder clube
-            }
-        });
+<style>
+    .container {
+        max-width: 1200px;
     }
+    
+    h1 {
+        font-weight: 700;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .card {
+        border-radius: 15px;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        font-weight: 600;
+        padding: 1rem;
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 8px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-info:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+    }
+    
+    .btn-info, .btn-warning, .btn-danger {
+        border-radius: 8px;
+        padding: 6px 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-info:hover, .btn-warning:hover, .btn-danger:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .badge {
+        font-weight: 500;
+        padding: 5px 10px;
+    }
+    
+    .modal-content {
+        border-radius: 15px;
+    }
+    
+    .modal-header {
+        border-radius: 15px 15px 0 0;
+    }
+    
+    /* Barra de pesquisa */
+    .input-group-text {
+        border-radius: 10px 0 0 10px;
+    }
+    
+    .form-control {
+        border-radius: 0 10px 10px 0;
+    }
+    
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #667eea;
+    }
+    
+    /* Hover nas linhas da tabela */
+    .table-hover tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.05);
+        transform: scale(1.001);
+        transition: all 0.2s ease;
+    }
+    
+    /* Alertas */
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+    
+    @media (max-width: 768px) {
+        .table-responsive {
+            border: none;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+        
+        .btn-sm {
+            padding: 5px 8px;
+            font-size: 0.8rem;
+        }
+        
+        .table td, .table th {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .d-flex.flex-wrap {
+            justify-content: center !important;
+        }
+        
+        .btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
 
-    // Inicializar o filtro para quando a página carregar
-    document.getElementById("searchInput").addEventListener("keyup", filtrarPorNome);
-});
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function filtrarPorNome() {
+            let searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            let clubes = document.querySelectorAll(".clube-item");
+
+            clubes.forEach(clube => {
+                let clubeNome = clube.getAttribute("data-clube-nome").toLowerCase();
+
+                if (clubeNome.includes(searchTerm)) {
+                    clube.classList.remove("d-none");
+                } else {
+                    clube.classList.add("d-none");
+                }
+            });
+        }
+
+        document.getElementById("searchInput").addEventListener("keyup", filtrarPorNome);
+    });
 </script>
-
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

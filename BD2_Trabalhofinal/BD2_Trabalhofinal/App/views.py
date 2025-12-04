@@ -1132,6 +1132,8 @@ def calcular_classificacao(competicao):
     # Dicionário para armazenar estatísticas dos clubes
     classificacao = defaultdict(lambda: {
         'nome': '',
+        'imagem': '',
+        'id': None, 
         'pontos': 0,
         'jogos': 0,
         'vitorias': 0,
@@ -1149,6 +1151,7 @@ def calcular_classificacao(competicao):
             clube_casa = jogo.clube_casa
             clube_casa_pk = clube_casa.pk
             clube_casa_nome = clube_casa.nome
+            clube_casa_imagem = clube_casa.imagem 
             clube_casa_valido = True
         except:
             clube_casa_valido = False
@@ -1157,6 +1160,7 @@ def calcular_classificacao(competicao):
             clube_fora = jogo.clube_fora
             clube_fora_pk = clube_fora.pk
             clube_fora_nome = clube_fora.nome
+            clube_fora_imagem = clube_fora.imagem 
             clube_fora_valido = True
         except:
             clube_fora_valido = False
@@ -1170,6 +1174,8 @@ def calcular_classificacao(competicao):
             gols_casa = P_Golo.objects.filter(jogo=jogo, clube=clube_casa).count()
             # Atualizar estatísticas do clube da casa
             classificacao[clube_casa_pk]['nome'] = clube_casa_nome
+            classificacao[clube_casa_pk]['imagem'] = clube_casa_imagem
+            classificacao[clube_casa_pk]['id'] = clube_casa_pk
             classificacao[clube_casa_pk]['jogos'] += 1
             classificacao[clube_casa_pk]['gols_pro'] += gols_casa
             
@@ -1177,6 +1183,8 @@ def calcular_classificacao(competicao):
             gols_fora = P_Golo.objects.filter(jogo=jogo, clube=clube_fora).count()
             # Atualizar estatísticas do clube visitante
             classificacao[clube_fora_pk]['nome'] = clube_fora_nome
+            classificacao[clube_fora_pk]['imagem'] = clube_fora_imagem
+            classificacao[clube_fora_pk]['imagem'] = clube_fora_imagem
             classificacao[clube_fora_pk]['jogos'] += 1
             classificacao[clube_fora_pk]['gols_pro'] += gols_fora
             

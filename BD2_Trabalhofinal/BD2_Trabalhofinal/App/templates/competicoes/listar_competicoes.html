@@ -4,140 +4,327 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center">Lista de Competições</h1>
+    <h1 class="text-center mb-4">Lista de Competições</h1>
 
     <!-- Barra de Pesquisa -->
-    <div class="mb-3">
-        <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar competição..." onkeyup="filtrarCompeticoes()">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-3">
+            <div class="input-group">
+                <span class="input-group-text bg-primary text-white border-0">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control border-0" 
+                       placeholder="Pesquisar competição..." onkeyup="filtrarCompeticoes()">
+            </div>
+        </div>
     </div>
-    <div class="text-end mb-3">
-        <a href="{% url 'adicionar_competicao' %}" class="btn btn-primary">Adicionar Competição</a>
-        <a href="{% url 'listar_formatos' %}" class="btn btn-info">Ver Formatos</a>
+
+    <!-- Botões de Ação -->
+    <div class="d-flex flex-wrap gap-3 justify-content-end mb-4">
+        <a href="{% url 'adicionar_competicao' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Adicionar Competição
+        </a>
+        <a href="{% url 'listar_formatos' %}" class="btn btn-info">
+            <i class="bi bi-diagram-3 me-2"></i>Ver Formatos
+        </a>
     </div>
+    
     {% if competicoes %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Nome</th>
-                    <th>Formato</th>
-                    <th>Data</th>
-                    <th>Vencedor</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="competicoesLista">
-                {% for competicao in competicoes %}
-                <tr class="competicao-item">
-                    <td class="competicao-nome">{{ competicao.nome }}</td>
-                    <td>{{ competicao.formato.nome }}</td>
-                    <td>
-                        {{ competicao.data_inicio }} a {{ competicao.data_fim }}
-                    </td>
-                    <td>
-                        {% if competicao.finalizado == True and competicao.vencedor %} <!--Garantir que, mesmo que "Terminado", exista o vencedor (para o caso de o clube ter sido apagado)-->
-                            Vencedor: 
-                            <a href="{% url 'detalhes_clube' competicao.vencedor.get_id %}">{{ competicao.vencedor.nome }}</a>
-                        {% else %}
-                            Não Terminado
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'detalhes_competicao' competicao.get_id %}" class="btn btn-info btn-sm me-2">Ver</a>
-                        <a href="{% url 'editar_competicao' competicao.get_id %}" class="btn btn-warning btn-sm me-2">Editar</a>
-                        <!-- Botão para abrir o modal -->
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ competicao.get_id }}">
-                            Apagar
-                        </button>
-                        
-                        <!-- Modal -->
-                        <div class="modal fade" id="deleteModal{{ competicao.get_id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ competicao.get_id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title" id="deleteModalLabel{{ competicao.get_id }}">Confirmar Exclusão</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Tem certeza de que deseja apagar a competição <strong>{{ competicao.nome }}</strong> ({{ competicao.ano }})?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form method="post" action="{% url 'apagar_competicao' competicao.get_id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Apagar</button>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        </form>
+    <div class="card shadow border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
+                        <tr>
+                            <th class="text-white border-0">Nome</th>
+                            <th class="text-white border-0">Formato</th>
+                            <th class="text-white border-0">Data</th>
+                            <th class="text-white border-0">Vencedor</th>
+                            <th class="text-white border-0">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="competicoesLista">
+                        {% for competicao in competicoes %}
+                        <tr class="competicao-item align-middle">
+                            <td class="competicao-nome fw-bold">{{ competicao.nome }}</td>
+                            <td>
+                                <span class="badge bg-primary">
+                                    {{ competicao.formato.nome }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <small class="text-muted">De</small>
+                                    <strong>{{ competicao.data_inicio|date:"d/m/Y" }}</strong>
+                                    <small class="text-muted">Até</small>
+                                    <strong>{{ competicao.data_fim|date:"d/m/Y" }}</strong>
+                                </div>
+                            </td>
+                            <td>
+                                {% if competicao.finalizado == True and competicao.vencedor %}
+                                <div class="d-flex align-items-center">
+                                    {% if competicao.vencedor.imagem %}
+                                    <img src="{{ competicao.vencedor.imagem }}" 
+                                         alt="{{ competicao.vencedor.nome }}" 
+                                         class="rounded-circle me-2"
+                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                    {% endif %}
+                                    <div>
+                                        <small class="text-muted d-block">Vencedor</small>
+                                        <a href="{% url 'detalhes_clube' competicao.vencedor.get_id %}" 
+                                           class="text-decoration-none fw-bold">
+                                            {{ competicao.vencedor.nome }}
+                                        </a>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                                {% else %}
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-clock me-1"></i>Não Terminado
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'detalhes_competicao' competicao.get_id %}" class="btn btn-info btn-sm me-1">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'editar_competicao' competicao.get_id %}" class="btn btn-warning btn-sm me-1">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal{{ competicao.get_id }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Modal de Exclusão -->
+                                <div class="modal fade" id="deleteModal{{ competicao.get_id }}" tabindex="-1" 
+                                     aria-labelledby="deleteModalLabel{{ competicao.get_id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content border-0 shadow">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ competicao.get_id }}">
+                                                    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Exclusão
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" 
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Tem certeza de que deseja apagar a competição 
+                                                <strong class="text-danger">{{ competicao.nome }}</strong>?
+                                                <div class="alert alert-warning mt-3 mb-0 p-2">
+                                                    <small><i class="bi bi-info-circle me-1"></i>
+                                                    Esta ação não pode ser desfeita.</small>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form method="post" action="{% url 'apagar_competicao' competicao.get_id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="bi bi-trash me-1"></i>Apagar
+                                                    </button>
+                                                    <button type="button" class="btn btn-secondary" 
+                                                            data-bs-dismiss="modal">Cancelar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     {% else %}
-    <div class="alert alert-info text-center">Nenhuma competição encontrada.</div>
+    <div class="card shadow border-0">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-trophy text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">Nenhuma competição encontrada</h4>
+            <p class="text-muted mb-4">Não existem competições registradas no momento.</p>
+            <a href="{% url 'adicionar_competicao' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Adicionar Primeira Competição
+            </a>
+        </div>
+    </div>
     {% endif %}
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    .container {
+        max-width: 1200px;
+    }
+    
+    h1 {
+        font-weight: 700;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .card {
+        border-radius: 15px;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        font-weight: 600;
+        padding: 1rem;
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 8px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-info:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+    }
+    
+    .btn-info, .btn-warning, .btn-danger {
+        border-radius: 8px;
+        padding: 6px 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-info:hover, .btn-warning:hover, .btn-danger:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .badge {
+        font-weight: 500;
+        padding: 5px 10px;
+    }
+    
+    .modal-content {
+        border-radius: 15px;
+    }
+    
+    .modal-header {
+        border-radius: 15px 15px 0 0;
+    }
+    
+    /* Barra de pesquisa */
+    .input-group-text {
+        border-radius: 10px 0 0 10px;
+    }
+    
+    .form-control {
+        border-radius: 0 10px 10px 0;
+    }
+    
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #667eea;
+    }
+    
+    /* Hover nas linhas da tabela */
+    .table-hover tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.05);
+        transform: scale(1.001);
+        transition: all 0.2s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .table-responsive {
+            border: none;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+        
+        .btn-sm {
+            padding: 5px 8px;
+            font-size: 0.8rem;
+        }
+        
+        .table td, .table th {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .d-flex.flex-wrap {
+            justify-content: center !important;
+        }
+        
+        .btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
 
-<!-- Script para filtrar competições -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    let searchInput = document.getElementById("searchInput");
+    document.addEventListener("DOMContentLoaded", function () {
+        let searchInput = document.getElementById("searchInput");
 
-    searchInput.addEventListener("keyup", function () {
-        let input = this.value.toLowerCase();
-        let competicoes = document.querySelectorAll(".competicao-item");
+        searchInput.addEventListener("keyup", function () {
+            let input = this.value.toLowerCase();
+            let competicoes = document.querySelectorAll(".competicao-item");
 
-        competicoes.forEach(competicao => {
-            let nome = competicao.querySelector(".competicao-nome").textContent.toLowerCase();
-            
-            if (nome.includes(input)) {
-                competicao.classList.remove("d-none"); // Mostrar
-            } else {
-                competicao.classList.add("d-none"); // Esconder
-            }
+            competicoes.forEach(competicao => {
+                let nome = competicao.querySelector(".competicao-nome").textContent.toLowerCase();
+                
+                if (nome.includes(input)) {
+                    competicao.classList.remove("d-none");
+                } else {
+                    competicao.classList.add("d-none");
+                }
+            });
         });
     });
-});
 </script>
-
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
