@@ -4,91 +4,270 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center">Lista de Equipas</h1>
-    <div class="text-end mb-3">
-        <a href="{% url 'adicionar_equipa' %}" class="btn btn-primary">Adicionar Equipa</a>
+    <h1 class="text-center mb-4">Lista de Equipas</h1>
+    
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{% url 'adicionar_equipa' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Adicionar Equipa
+        </a>
     </div>
+    
     {% if equipas %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Nome</th>
-                    <th>Clube</th>
-					<th>Estado</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for equipa in equipas %}
-                <tr>
-                    <td>
-						{{ equipa.nome }}
-                    </td>
-                    <td>
-                        {{ equipa.clube.nome }}
-                    </td>
-					<td>{{ equipa.estado }}</td>
-                    <td>
-                        <a href="{% url 'editar_equipa' equipa.get_id %}" class="btn btn-warning btn-sm me-2">Editar</a>
-                        <!-- Botão para abrir o modal -->
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ equipa.get_id }}">
-                            Apagar
-                        </button>
-                        
-                        <!-- Modal -->
-                        <div class="modal fade" id="deleteModal{{ equipa.get_id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ equipa.get_id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title" id="deleteModalLabel{{ equipa.get_id }}">Confirmar Exclusão</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Tem certeza de que deseja apagar a equipa <b>{{ equipa.nome }}</b> do clube <b>{{ equipa.clube.nome }}</b>?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form method="post" action="{% url 'apagar_equipa' equipa.get_id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Apagar</button>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        </form>
+    <div class="card shadow border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
+                        <tr>
+                            <th class="text-white border-0">Nome</th>
+                            <th class="text-white border-0">Clube</th>
+                            <th class="text-white border-0">Estado</th>
+                            <th class="text-white border-0">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for equipa in equipas %}
+                        <tr class="align-middle">
+                            <td class="fw-bold">{{ equipa.nome }}</td>
+                            <td>
+                                {% if equipa.clube %}
+                                <div class="d-flex align-items-center">
+                                    {% if equipa.clube.imagem %}
+                                    <img src="{{ equipa.clube.imagem }}" 
+                                         alt="{{ equipa.clube.nome }}" 
+                                         class="rounded-circle me-3"
+                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                    {% endif %}
+                                    <span>{{ equipa.clube.nome }}</span>
+                                </div>
+                                {% else %}
+                                <span class="text-muted">Sem clube</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% with estado=equipa.estado %}
+                                    {% if estado == "Ativo" %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i>{{ estado }}
+                                        </span>
+                                    {% elif estado == "Suspensa" %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-exclamation-triangle me-1"></i>{{ estado }}
+                                        </span>
+                                    {% elif estado == "Extinta" or estado == "Extinto" %}
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle me-1"></i>{{ estado }}
+                                        </span>
+                                    {% elif estado == "Inativo" %}
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-pause-circle me-1"></i>{{ estado }}
+                                        </span>
+                                    {% elif estado == "Em formação" or estado == "Formação" %}
+                                        <span class="badge bg-primary">
+                                            <i class="bi bi-person-plus me-1"></i>{{ estado }}
+                                        </span>
+                                    {% elif estado == "Desativado" %}
+                                        <span class="badge bg-dark">
+                                            <i class="bi bi-power me-1"></i>{{ estado }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-info">
+                                            <i class="bi bi-question-circle me-1"></i>{{ estado }}
+                                        </span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'editar_equipa' equipa.get_id %}" class="btn btn-warning btn-sm me-1">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal{{ equipa.get_id }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Modal de Exclusão -->
+                                <div class="modal fade" id="deleteModal{{ equipa.get_id }}" tabindex="-1" 
+                                     aria-labelledby="deleteModalLabel{{ equipa.get_id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content border-0 shadow">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ equipa.get_id }}">
+                                                    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Exclusão
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" 
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Tem certeza de que deseja apagar a equipa 
+                                                <strong class="text-danger">{{ equipa.nome }}</strong> 
+                                                do clube <strong>{{ equipa.clube.nome }}</strong>?
+                                                <div class="alert alert-warning mt-3 mb-0 p-2">
+                                                    <small><i class="bi bi-info-circle me-1"></i>
+                                                    Esta ação não pode ser desfeita.</small>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form method="post" action="{% url 'apagar_equipa' equipa.get_id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="bi bi-trash me-1"></i>Apagar
+                                                    </button>
+                                                    <button type="button" class="btn btn-secondary" 
+                                                            data-bs-dismiss="modal">Cancelar</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     {% else %}
-    <div class="alert alert-info text-center">Nenhuma Equipa encontrada.</div>
+    <div class="card shadow border-0">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">Nenhuma equipa encontrada</h4>
+            <p class="text-muted mb-4">Não existem equipas registradas no momento.</p>
+            <a href="{% url 'adicionar_equipa' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Adicionar Primeira Equipa
+            </a>
+        </div>
+    </div>
     {% endif %}
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+    .container {
+        max-width: 1200px;
+    }
+    
+    h1 {
+        font-weight: 700;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .card {
+        border-radius: 15px;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        font-weight: 600;
+        padding: 1rem;
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 8px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-warning, .btn-danger {
+        border-radius: 8px;
+        padding: 6px 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-warning:hover, .btn-danger:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .badge {
+        font-weight: 500;
+        padding: 5px 10px;
+    }
+    
+    .modal-content {
+        border-radius: 15px;
+    }
+    
+    .modal-header {
+        border-radius: 15px 15px 0 0;
+    }
+    
+    /* Hover nas linhas da tabela */
+    .table-hover tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.05);
+        transform: scale(1.001);
+        transition: all 0.2s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .table-responsive {
+            border: none;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+        
+        .btn-sm {
+            padding: 5px 8px;
+            font-size: 0.8rem;
+        }
+        
+        .table td, .table th {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .d-flex.justify-content-end {
+            justify-content: center !important;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

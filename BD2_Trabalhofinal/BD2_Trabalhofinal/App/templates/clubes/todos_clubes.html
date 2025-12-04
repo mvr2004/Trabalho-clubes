@@ -46,6 +46,11 @@
                             <i class="bi bi-x-circle me-1"></i>Extinto
                         </span>
                     {% endif %}
+                    {% if clube.estado == "Suspenso" %}
+                        <span class="badge bg-danger ms-2">
+                            <i class="bi bi-x-circle me-1"></i>Suspenso
+                        </span>
+                    {% endif %}
                 </h5>
                 <p class="mb-1 text-muted">
                     <i class="bi bi-calendar3 me-1"></i> Fundado em: {{ clube.ano_fundacao }}

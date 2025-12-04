@@ -75,11 +75,32 @@
                                         <i class="bi bi-x-circle me-1"></i>Extinto
                                     </span>
                                     <br><small class="text-muted">{{ clube.ano_extinto }}</small>
-                                {% else %}
+                                {% elif clube.estado == "Ativo" %}
                                     <span class="badge bg-success">
                                         <i class="bi bi-check-circle me-1"></i>Ativo
                                     </span>
+                                {% elif clube.estado == "Inativo" %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-pause-circle me-1"></i>Inativo
+                                    </span>
+                                {% elif clube.estado == "Suspenso" %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>Suspenso
+                                    </span>
+                                {% elif clube.estado == "Falência" or clube.estado == "Falido" %}
+                                    <span class="badge bg-dark">
+                                        <i class="bi bi-bank me-1"></i>{{ clube.estado }}
+                                    </span>
+                                {% elif clube.estado == "Fusão" %}
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-arrow-left-right me-1"></i>Fusão
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-primary">
+                                        <i class="bi bi-question-circle me-1"></i>{{ clube.estado }}
+                                    </span>
                                 {% endif %}
+                                
                             </td>
                             <td>
                                 {% if clube.associacao %}
