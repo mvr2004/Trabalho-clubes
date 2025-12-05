@@ -8,9 +8,9 @@
     <div class="card shadow-lg border-0 mb-4 overflow-hidden">
         <div class="card-header py-3" style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
             <div class="d-flex align-items-center">
-                <a href="{% url 'listar_jogadores' %}" class="btn btn-outline-light me-3">
+                <button onclick="goBack()" class="btn btn-outline-light me-3">
                     <i class="bi bi-arrow-left"></i>
-                </a>
+                </button>
                 <h3 class="mb-0 text-white">
                     <i class="bi bi-person-running me-2"></i>
                     Detalhes do Jogador
@@ -361,4 +361,11 @@
         }
     }
 </style>
+
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 {% endblock %}

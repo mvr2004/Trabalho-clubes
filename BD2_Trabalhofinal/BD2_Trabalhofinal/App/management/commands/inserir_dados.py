@@ -506,7 +506,7 @@ class Command(BaseCommand):
                     },
                     {
                         'nome': "Sporting",
-                        'imagem': "https://www.zerozero.pt/img/logos/equipas/16_imgbank_1722518934.png",
+                        'imagem': "https://cdn-img.zerozero.pt/img/logos/equipas/16_imgbank_1741687081.png",
                         'ano_fundacao': 1906,
                         'ano_extinto': 0,
                         'alcunhas': "Leões",
@@ -542,7 +542,7 @@ class Command(BaseCommand):
                     },
                     {
                         'nome': "SC Braga",
-                        'imagem': "https://www.zerozero.pt/img/logos/equipas/15_imgbank_1682583585.png",
+                        'imagem': "https://cdn-img.zerozero.pt/img/logos/equipas/15_imgbank_1744105134.png",
                         'ano_fundacao': 1921,
                         'ano_extinto': 0,
                         'alcunhas': "Arsenalistas, Guerreiros do Minho",
@@ -626,7 +626,7 @@ class Command(BaseCommand):
                     },
                      {
                         'nome': "Moreirense",
-                        'imagem': "https://www.zerozero.pt/img/logos/equipas/6_imgbank_1682585615.png",
+                        'imagem': "https://cdn-img.zerozero.pt/img/logos/equipas/6_imgbank_1757064961.png",
                         'ano_fundacao': 1938,
                         'ano_extinto': 0,
                         'alcunhas': "Cónegos, Moreira",
@@ -638,7 +638,7 @@ class Command(BaseCommand):
                     },
                     {
                         'nome': "Gil Vicente",
-                        'imagem': "https://www.zerozero.pt/img/logos/equipas/11_imgbank_1682582593.png",
+                        'imagem': "https://cdn-img.zerozero.pt/img/logos/equipas/11_imgbank_1682582593.png",
                         'ano_fundacao': 1924,
                         'ano_extinto': 0,
                         'alcunhas': "Gilistas, Galos de Barcelos",
@@ -686,7 +686,7 @@ class Command(BaseCommand):
                     },
                     {
                         'nome': "Est. Amadora",
-                        'imagem': "https://www.zerozero.pt/img/logos/equipas/253884_imgbank_1691766850.png",
+                        'imagem': "https://cdn-img.zerozero.pt/img/logos/equipas/253884_imgbank_1755880629.png",
                         'ano_fundacao': 1932,
                         'ano_extinto': 0,
                         'alcunhas': "Tricolores, Estrelistas",
