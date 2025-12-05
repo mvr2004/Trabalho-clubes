@@ -1,118 +1,232 @@
 {% block substituicoes_table %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Clube</th>
-                    <th>Jogador Sai</th>
-                    <th>Jogador Entra</th>
-                    <th>Minuto</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for estatistica in lista %}
-                    <tr>
-                        <td>
-							{% if estatistica.clube %}
-								{{ estatistica.clube.nome }}
-							{% else %}
-								Clube Não Encontrado
-							{% endif %}
-						</td>
-                        <td>
-							{% if estatistica.jogador_sai %}
-								{{ estatistica.jogador_sai.nome }}
-							{% else %}
-								Jogador Não Encontrado
-							{% endif %}
-						</td>
-                        <td>
-							{% if estatistica.jogador_entra %}
-								{{ estatistica.jogador_entra.nome }}
-							{% else %}
-								Jogador Não Encontrado
-							{% endif %}
-						</td>
-                        <td>
-                            {{ estatistica.minuto }}
-                            {% if estatistica.compensacao %}
-                                + {{ estatistica.compensacao }}
-                            {% endif %}
-                        </td>
-						<td>
-							<!--EDITAR-->
-							<a href="{% url 'editar_substituicao' estatistica.get_id %}" class="btn btn-warning btn-sm me-2">
-								<i class="bi bi-pencil-square"></i>
-								Editar
-							</a>
-							<!--APAGAR-->
-                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ estatistica.get_id }}">
-								<i class="bi bi-trash"></i> <!-- Ícone de lixo -->
-                                Apagar
-                            </button>
+<div class="table-responsive">
+    <table class="table table-hover mb-0">
+        <thead style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
+            <tr>
+                <th class="text-white border-0">Clube</th>
+                <th class="text-white border-0">Jogador Sai</th>
+                <th class="text-white border-0">Jogador Entra</th>
+                <th class="text-white border-0">Minuto</th>
+                <th class="text-white border-0">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estatistica in lista %}
+            <tr class="align-middle">
+                <td>
+                    {% if estatistica.clube %}
+                    <div class="d-flex align-items-center">
+                        {% if estatistica.clube.imagem %}
+                        <img src="{{ estatistica.clube.imagem }}" 
+                             alt="{{ estatistica.clube.nome }}" 
+                             class="rounded-circle me-3"
+                             style="width: 40px; height: 40px; object-fit: cover;">
+                        {% endif %}
+                        <span class="fw-bold">{{ estatistica.clube.nome }}</span>
+                    </div>
+                    {% else %}
+                    <span class="text-muted">
+                        <i class="bi bi-question-circle me-2"></i>Clube Não Encontrado
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if estatistica.jogador_sai %}
+                    <div class="d-flex align-items-center">
+                        {% if estatistica.jogador_sai.imagem %}
+                        <img src="{{ estatistica.jogador_sai.imagem }}" 
+                             alt="{{ estatistica.jogador_sai.nome }}" 
+                             class="rounded-circle me-3"
+                             style="width: 40px; height: 40px; object-fit: cover;">
+                        {% endif %}
+                        <div>
+                            <span class="fw-bold">{{ estatistica.jogador_sai.nome }}</span>
+                            <div class="badge bg-danger mt-1">
+                                <i class="bi bi-arrow-up-right me-1"></i>Sai
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <span class="text-muted">
+                        <i class="bi bi-question-circle me-2"></i>Jogador Não Encontrado
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if estatistica.jogador_entra %}
+                    <div class="d-flex align-items-center">
+                        {% if estatistica.jogador_entra.imagem %}
+                        <img src="{{ estatistica.jogador_entra.imagem }}" 
+                             alt="{{ estatistica.jogador_entra.nome }}" 
+                             class="rounded-circle me-3"
+                             style="width: 40px; height: 40px; object-fit: cover;">
+                        {% endif %}
+                        <div>
+                            <span class="fw-bold">{{ estatistica.jogador_entra.nome }}</span>
+                            <div class="badge bg-success mt-1">
+                                <i class="bi bi-arrow-down-left me-1"></i>Entra
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <span class="text-muted">
+                        <i class="bi bi-question-circle me-2"></i>Jogador Não Encontrado
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="badge bg-primary px-3 py-2">
+                        <i class="bi bi-clock me-1"></i>
+                        {{ estatistica.minuto }}
+                        {% if estatistica.compensacao %}
+                            +{{ estatistica.compensacao }}
+                        {% endif %}'
+                    </span>
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'editar_substituicao' estatistica.get_id %}" class="btn btn-warning btn-sm me-1">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" 
+                                data-bs-target="#deleteModal{{ estatistica.get_id }}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="deleteModal{{ estatistica.get_id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ estatistica.get_id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header bg-danger text-white">
-                                            <h5 class="modal-title" id="deleteModalLabel{{ estatistica.get_id }}">Confirmar Exclusão</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Tem certeza de que deseja apagar a substituição do clube <b>{{estatistica.clube.nome}}</b> aos <b>{{ estatistica.minuto}}
-                                            {% if estatistica.compensacao %}
-                                                (+{{ estatistica.compensacao }})
-                                            {% endif %}
-											</b> minutos?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <form method="post" action="{% url 'apagar_substituicao' estatistica.get_id %}">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-danger">
-													<i class="bi bi-trash"></i> <!-- Ícone de lixo -->
-												</button>
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                            </form>
-                                        </div>
+                    <!-- Modal de Exclusão -->
+                    <div class="modal fade" id="deleteModal{{ estatistica.get_id }}" tabindex="-1" 
+                         aria-labelledby="deleteModalLabel{{ estatistica.get_id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content border-0 shadow">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="deleteModalLabel{{ estatistica.get_id }}">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Exclusão
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" 
+                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Tem certeza de que deseja apagar a substituição do clube 
+                                    <strong class="text-danger">
+                                        {% if estatistica.clube %}
+                                            {{ estatistica.clube.nome }}
+                                        {% else %}
+                                            Clube Desconhecido
+                                        {% endif %}
+                                    </strong> 
+                                    aos <strong>{{ estatistica.minuto }}
+                                    {% if estatistica.compensacao %}
+                                        (+{{ estatistica.compensacao }})
+                                    {% endif %}
+                                    </strong> minutos?
+                                    <div class="alert alert-warning mt-3 mb-0 p-2">
+                                        <small><i class="bi bi-info-circle me-1"></i>
+                                        Esta ação não pode ser desfeita.</small>
                                     </div>
                                 </div>
+                                <div class="modal-footer">
+                                    <form method="post" action="{% url 'apagar_substituicao' estatistica.get_id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash me-1"></i>Apagar
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" 
+                                                data-bs-dismiss="modal">Cancelar</button>
+                                    </form>
+                                </div>
                             </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        font-weight: 600;
+        padding: 1rem;
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+    
+    .badge {
+        font-weight: 500;
+        padding: 5px 10px;
+    }
+    
+    .modal-content {
+        border-radius: 15px;
+    }
+    
+    .modal-header {
+        border-radius: 15px 15px 0 0;
+    }
+    
+    /* Hover nas linhas da tabela */
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+        transform: scale(1.001);
+        transition: all 0.2s ease;
+    }
+    
+    /* Botões */
+    .btn-warning, .btn-danger {
+        border-radius: 8px;
+        padding: 6px 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-warning:hover, .btn-danger:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .btn-group {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+        
+        .btn-sm {
+            padding: 5px 8px;
+            font-size: 0.8rem;
+        }
+        
+        .table td, .table th {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .d-flex.align-items-center {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .me-3 {
+            margin-right: 0 !important;
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

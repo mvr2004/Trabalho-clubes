@@ -1,117 +1,208 @@
 {% block home_admin %}
-	<div class="container">
-		<div class="row g-4 justify-content-center">
-			<!-- Associações -->
-			<div class="col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Associações de Futebol</h5>
-					</div>
-					<div class="card-body text-center">
-						<i class="fas fa-users-cog fa-3x text-primary mb-3"></i>
-						<p class="card-text">Veja e edite as AF disponíveis.</p>
-						<a href="{% url 'listar_associacoes' %}" class="btn btn-primary btn-sm">Ver AF</a>
-					</div>
-				</div>
-			</div>
-			
-			<!-- Estádios -->
-			<div class="col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Estádios de Futebol</h5>
-					</div>
-					<div class="card-body text-center">
-						<i class="fas fa-users-cog fa-3x text-primary mb-3"></i>
-						<p class="card-text">Veja e edite os Estádios disponíveis.</p>
-						<a href="{% url 'listar_estadios' %}" class="btn btn-primary btn-sm">Ver Estádios</a>
-					</div>
-				</div>
-			</div>
-			
-			<!-- Clubes -->
-			<div class="col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Clubes</h5>
-					</div>
-					<div class="card-body text-center">
-						<i class="fas fa-futbol fa-3x text-primary mb-3"></i>
-						<p class="card-text">Gerencie a lista de clubes disponíveis.</p>
-						<a href="{% url 'listar_clubes' %}" class="btn btn-primary btn-sm">Ver Clubes</a>
-					</div>
-				</div>
-			</div>
-			
-			<!-- Equipas -->
-			<div class="col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Equipas</h5>
-					</div>
-					<div class="card-body text-center">
-						<i class="fas fa-users-cog fa-3x text-primary mb-3"></i>
-						<p class="card-text">Veja e edite as Equipas disponíveis.</p>
-						<a href="{% url 'listar_equipas' %}" class="btn btn-primary btn-sm">Ver Equipas</a>
-					</div>
-				</div>
-			</div>
-			
-			<!-- Competições -->
-			<div class="col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Competições</h5>
-					</div>
-					<div class="card-body text-center">
-						<i class="fas fa-trophy fa-3x text-primary mb-3"></i>
-						<p class="card-text">Veja e edite as competições disponíveis.</p>
-						<a href="{% url 'listar_competicoes' %}" class="btn btn-primary btn-sm">Ver Competições</a>
-					</div>
-				</div>
-			</div>
+<div class="container mt-4">
+    <div class="row g-4 justify-content-center">
+        <!-- Associações -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-lg border-0 h-100 hover-card">
+                <div class="card-header py-3 text-center" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0 text-white">Associações de Futebol</h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="card-text text-muted">Gerencie as associações disponíveis.</p>
+                    <a href="{% url 'listar_associacoes' %}" class="btn btn-primary btn-sm mt-2">
+                        Ver AF
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Estádios -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-lg border-0 h-100 hover-card">
+                <div class="card-header py-3 text-center" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0 text-white">Estádios de Futebol</h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="card-text text-muted">Gerencie os estádios disponíveis.</p>
+                    <a href="{% url 'listar_estadios' %}" class="btn btn-primary btn-sm mt-2">
+                        Ver Estádios
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Clubes -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-lg border-0 h-100 hover-card">
+                <div class="card-header py-3 text-center" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0 text-white">Clubes</h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="card-text text-muted">Gerencie a lista de clubes.</p>
+                    <a href="{% url 'listar_clubes' %}" class="btn btn-primary btn-sm mt-2">
+                        Ver Clubes
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Equipas -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-lg border-0 h-100 hover-card">
+                <div class="card-header py-3 text-center" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0 text-white">Equipas</h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="card-text text-muted">Gerencie as equipas disponíveis.</p>
+                    <a href="{% url 'listar_equipas' %}" class="btn btn-primary btn-sm mt-2">
+                        Ver Equipas
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Competições -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-lg border-0 h-100 hover-card">
+                <div class="card-header py-3 text-center" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0 text-white">Competições</h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="card-text text-muted">Gerencie as competições disponíveis.</p>
+                    <a href="{% url 'listar_competicoes' %}" class="btn btn-primary btn-sm mt-2">
+                        Ver Competições
+                    </a>
+                </div>
+            </div>
+        </div>
 
-			<!-- Jogos -->
-			<div class="col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Jogos</h5>
-					</div>
-					<div class="card-body text-center">
-						<i class="fas fa-gamepad fa-3x text-primary mb-3"></i>
-						<p class="card-text">Explore e adicione jogos à lista.</p>
-						<a href="{% url 'listar_jogos' %}" class="btn btn-primary btn-sm">Ver Jogos</a>
-					</div>
-				</div>
-			</div>
-			
-			<!-- Jogadores -->
-			<div class="col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Jogadores</h5>
-					</div>
-					<div class="card-body text-center">
-						<i class="fas fa-users fa-3x text-primary mb-3"></i>
-						<p class="card-text">Veja e edite os Jogadores disponíveis.</p>
-						<a href="{% url 'listar_jogadores' %}" class="btn btn-primary btn-sm">Ver Jogadores</a>
-					</div>
-				</div>
-			</div>
-			
-			<!-- Posições Jogadores -->
-			<div class="col-sm-6 col-md-4 col-lg-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-header bg-primary text-white text-center">
-						<h5 class="mb-0">Posições dos Jogadores</h5>
-					</div>
-					<div class="card-body text-center">
-						<i class="fas fa-users fa-3x text-primary mb-3"></i>
-						<p class="card-text">Veja e edite as Posições dos Jogadores disponíveis.</p>
-						<a href="{% url 'listar_posicoes' %}" class="btn btn-primary btn-sm">Ver Posições</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <!-- Jogos -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-lg border-0 h-100 hover-card">
+                <div class="card-header py-3 text-center" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0 text-white">Jogos</h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="card-text text-muted">Explore e gerencie os jogos.</p>
+                    <a href="{% url 'listar_jogos' %}" class="btn btn-primary btn-sm mt-2">
+                        Ver Jogos
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Jogadores -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-lg border-0 h-100 hover-card">
+                <div class="card-header py-3 text-center" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0 text-white">Jogadores</h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="card-text text-muted">Gerencie os jogadores disponíveis.</p>
+                    <a href="{% url 'listar_jogadores' %}" class="btn btn-primary btn-sm mt-2">
+                        Ver Jogadores
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Posições Jogadores -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-lg border-0 h-100 hover-card">
+                <div class="card-header py-3 text-center" style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0 text-white">Posições</h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <p class="card-text text-muted">Gerencie as posições dos jogadores.</p>
+                    <a href="{% url 'listar_posicoes' %}" class="btn btn-primary btn-sm mt-2">
+                        Ver Posições
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1400px;
+    }
+    
+    .card {
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .hover-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2) !important;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        border-bottom: none;
+    }
+    
+    .card-body {
+        padding: 2rem !important;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        padding: 8px 20px;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Animações */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .col-sm-6:nth-child(1) .card { animation: fadeInUp 0.3s ease; }
+    .col-sm-6:nth-child(2) .card { animation: fadeInUp 0.4s ease; }
+    .col-sm-6:nth-child(3) .card { animation: fadeInUp 0.5s ease; }
+    .col-sm-6:nth-child(4) .card { animation: fadeInUp 0.6s ease; }
+    .col-sm-6:nth-child(5) .card { animation: fadeInUp 0.7s ease; }
+    .col-sm-6:nth-child(6) .card { animation: fadeInUp 0.8s ease; }
+    .col-sm-6:nth-child(7) .card { animation: fadeInUp 0.9s ease; }
+    .col-sm-6:nth-child(8) .card { animation: fadeInUp 1s ease; }
+    
+    @media (max-width: 768px) {
+        .col-sm-6 {
+            margin-bottom: 20px;
+        }
+        
+        .card-body {
+            padding: 1.5rem !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .row {
+            margin-left: -10px;
+            margin-right: -10px;
+        }
+        
+        .col-sm-6 {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    }
+</style>
 {% endblock %}

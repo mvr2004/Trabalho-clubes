@@ -93,8 +93,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'projeto_BD2',
-        'USER': 'postgres',
-        'PASSWORD': '123',
+        'USER': 'rds',
+        'PASSWORD': '12345',
         'HOST': 'localhost',
         'PORT': '5432',
     },
@@ -219,7 +219,12 @@ AUTH_USER_MODEL = 'App.Utilizador'  # Substitui 'tua_app' pelo nome da tua app
 
 
 
-# para testar no tele
-# ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.81']
-
+# MODIFIQUE PARA:
+ALLOWED_HOSTS = [
+    '172.28.80.97',      # IP do seu WSL2
+    'localhost',         # localhost no WSL
+    '127.0.0.1',         # loopback
+    '0.0.0.0',           # todas as interfaces
+    '192.168.1.6',  
+]
 

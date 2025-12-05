@@ -3,60 +3,107 @@
 {% block title %}Perfil{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-4">
     <h1 class="text-center mb-4">
+        <i class="bi bi-person-circle me-2"></i>
         Meu Perfil
         {% if user.is_staff %}
-            - <span class="text-danger">Administrador</span>
+            <span class="badge ms-2">
+                <i class="bi bi-shield-lock me-1"></i>Administrador
+            </span>
         {% endif %}
     </h1>
 
     <!-- Card de Informações do Utilizador -->
-    <div class="card shadow-lg border-0 rounded-4 mb-5">
-        <div class="card-header bg-primary text-light rounded-top-4">
-            <h5 class="mb-0">Informações do Utilizador</h5>
+    <div class="card shadow-lg border-0 mb-4">
+        <div class="card-header py-3" style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
+            <div class="d-flex align-items-center">
+                <h5 class="mb-0 text-white">
+                    <i class="bi bi-person-badge me-2"></i>Informações do Utilizador
+                </h5>
+            </div>
         </div>
-        <div class="card-body">
-            <p><strong>Nome:</strong> {{ utilizador.nome }}</p>
-            <p><strong>Email:</strong> {{ utilizador.email }}</p>
+        
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <!-- Avatar do Usuário -->
+                <div class="col-12 col-md-3 text-center mb-4 mb-md-0">
+                    <div class="user-avatar mx-auto" style="width: 120px; height: 120px; font-size: 3rem;">
+                        {{ utilizador.nome|first|upper }}
+                    </div>
+                </div>
+
+                <!-- Informações -->
+                <div class="col-12 col-md-9">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 rounded" style="background: rgba(102, 126, 234, 0.1);">
+                                <i class="bi bi-person text-primary fs-4 me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Nome</small>
+                                    <strong class="fs-5">{{ utilizador.nome }}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 rounded" style="background: rgba(102, 126, 234, 0.1);">
+                                <i class="bi bi-envelope text-primary fs-4 me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Email</small>
+                                    <strong class="fs-5">{{ utilizador.email }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-footer d-flex flex-column flex-md-row justify-content-end gap-2">
-            <!-- Botão para editar perfil -->
-            <a href="{% url 'editar_perfil' %}" class="btn btn-warning mb-2 mb-md-0">
-                <i class="bi bi-pencil-square"></i> Editar Perfil
-            </a>
-            <!-- Botão para alterar senha -->
-            <a href="{% url 'editar_senha' %}" class="btn btn-secondary mb-2 mb-md-0">
-                <i class="bi bi-key"></i> Alterar Senha
-            </a>
-            <!-- Botão para terminar sessão -->
-            <a href="{% url 'logout' %}" class="btn btn-danger">
-                <i class="bi bi-box-arrow-right"></i> Terminar Sessão
-            </a>
+        
+        <div class="card-footer py-3 bg-transparent">
+            <div class="d-flex flex-column flex-md-row justify-content-end gap-3">
+                <a href="{% url 'editar_perfil' %}" class="btn btn-warning">
+                    <i class="bi bi-pencil-square me-2"></i>Editar Perfil
+                </a>
+                <a href="{% url 'editar_senha' %}" class="btn btn-info">
+                    <i class="bi bi-key me-2"></i>Alterar Senha
+                </a>
+                <a href="{% url 'logout' %}" class="btn btn-danger">
+                    <i class="bi bi-box-arrow-right me-2"></i>Terminar Sessão
+                </a>
+            </div>
         </div>
     </div>
 
     {% if not user.is_staff %}
         <!-- Lista de Clubes Favoritos -->
-        <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-header bg-success text-light rounded-top-4">
-                <h5 class="mb-0">Clubes Favoritos</h5>
+        <div class="card shadow-lg border-0">
+            <div class="card-header py-3" style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0 text-white">
+                        <i class="bi bi-heart me-2"></i>Clubes Favoritos
+                    </h5>
+                    <span class="badge bg-success fs-6 px-3 py-2">
+                        {{ clubes_favoritos|length }} favorito{{ clubes_favoritos|length|pluralize }}
+                    </span>
+                </div>
             </div>
-            <div class="card-body">
+            
+            <div class="card-body p-4">
                 {% if clubes_favoritos %}
                     <div class="list-group">
                         {% for favorito in clubes_favoritos %}
-                            <div class="list-group-item d-flex flex-column flex-md-row align-items-center py-3">
+                            <div class="list-group-item d-flex flex-column flex-md-row align-items-center py-3 border-0 mb-3 shadow-sm">
                                 <!-- Logo ou Ícone -->
-                                <div class="d-flex align-items-center mb-3 mb-md-0">
+                                <div class="d-flex align-items-center mb-3 mb-md-0 me-md-4">
                                     {% if favorito.clube.imagem %}
                                         <img src="{{ favorito.clube.imagem }}" 
                                              alt="{{ favorito.clube.nome }}" 
-                                             class="rounded-circle me-3 shadow-sm"
-                                             style="width: 50px; height: 50px; object-fit: cover;">
+                                             class="rounded-circle me-4 shadow-sm border border-3" 
+                                             style="width: 70px; height: 70px; object-fit: cover; border-color: #dc3545 !important;">
                                     {% else %}
-                                        <div class="rounded-circle me-3 bg-secondary text-light text-center shadow-sm" 
-                                             style="width: 50px; height: 50px; line-height: 50px; font-size: 18px;">
+                                        <div class="rounded-circle me-4 text-light text-center shadow-sm d-flex align-items-center justify-content-center"
+                                             style="width: 70px; height: 70px; font-size: 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                             ⚽
                                         </div>
                                     {% endif %}
@@ -64,30 +111,41 @@
 
                                 <!-- Nome do Clube -->
                                 <div class="flex-grow-1 text-center text-md-start mb-3 mb-md-0">
-                                    <h6 class="mb-0">{{ favorito.clube.nome }}</h6>
+                                    <h6 class="mb-0 fw-bold">{{ favorito.clube.nome }}</h6>
+                                    {% if favorito.clube.pais %}
+                                    <small class="text-muted">
+                                        <i class="bi bi-geo-alt-fill me-1"></i>{{ favorito.clube.pais }}
+                                    </small>
+                                    {% endif %}
                                     {% if favorito.clube.extinto %}
-                                        <small class="text-danger">Extinto</small>
+                                    <div class="mt-1">
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle me-1"></i>Extinto
+                                        </span>
+                                    </div>
                                     {% endif %}
                                 </div>
 
                                 <!-- Botões de Ação -->
                                 <div class="d-flex gap-2">
-                                    <!-- Botão Ver Detalhes -->
                                     <a href="{% url 'detalhes_clube' favorito.clube.get_id %}" class="btn btn-primary">
-                                        <i class="bi bi-info-circle"></i> Ver Detalhes
+                                        <i class="bi bi-info-circle me-1"></i>Ver
                                     </a>
-
-                                    <!-- Botão Remover Favorito com ícone de lixo -->
                                     <a href="{% url 'remover_favorito' favorito.clube.get_id %}" class="btn btn-danger">
-                                        <i class="bi bi-trash"></i> <!-- Ícone de lixo -->
+                                        <i class="bi bi-trash"></i>
                                     </a>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                 {% else %}
-                    <div class="alert alert-info text-center mb-0">
-                        Nenhum clube favorito adicionado ainda.
+                    <div class="text-center py-5">
+                        <i class="bi bi-heart text-muted" style="font-size: 3rem;"></i>
+                        <h4 class="text-muted mt-3">Nenhum clube favorito</h4>
+                        <p class="text-muted mb-4">Ainda não adicionou nenhum clube aos favoritos.</p>
+                        <a href="{% url 'todos_clubes' %}" class="btn btn-primary">
+                            <i class="bi bi-search me-2"></i>Explorar Clubes
+                        </a>
                     </div>
                 {% endif %}
             </div>
@@ -95,29 +153,134 @@
     {% endif %}
 </div>
 
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    .container {
+        max-width: 900px;
+    }
+    
+    h1 {
+        font-weight: 700;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* Card styling */
+    .card {
+        border-radius: 15px;
+        animation: fadeInUp 0.5s ease;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+
+    /* Badge styles */
+    .badge {
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Buttons */
+    .btn-warning {
+        background: linear-gradient(90deg, #ffc107 0%, #ffca2c 100%);
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-warning:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+    }
+    
+    .btn-info {
+        background: linear-gradient(90deg, #17a2b8 0%, #20c997 100%);
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-info:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+    }
+    
+    .btn-danger {
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* List group items */
+    .list-group-item {
+        border-radius: 15px !important;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .list-group-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15) !important;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 15px;
+        }
+        
+        .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        .d-flex.flex-column.flex-md-row {
+            flex-direction: column !important;
+        }
+        
+        .btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .d-flex.gap-2 {
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .d-flex.gap-2 .btn {
+            margin-bottom: 5px;
+        }
+    }
+</style>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
