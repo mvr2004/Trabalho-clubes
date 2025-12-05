@@ -6,9 +6,9 @@
     <div class="card shadow-lg border-0 mb-4 overflow-hidden">
         <div class="card-header py-3" style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
             <div class="d-flex align-items-center">
-                <a href="{% url 'listar_jogos' %}" class="btn btn-outline-light me-3">
+                <button onclick="goBack()" class="btn btn-outline-light me-3">
                     <i class="bi bi-arrow-left"></i>
-                </a>
+                </button>
                 <h3 class="mb-0 text-white">
                     <i class="bi bi-controller me-2"></i>
                     Detalhes do Jogo
@@ -240,22 +240,51 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         {% for golo in golos_casa %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                                <div>
-                                                    <span class="badge bg-primary me-2">
-                                                        {{ golo.minuto }}'{% if golo.compensacao %}+{{ golo.compensacao }}'{% endif %}
-                                                    </span>
-                                                    {% if golo.jogador %}
-                                                        <strong>{{ golo.jogador.num_camisola }}.</strong> {{ golo.jogador.nome }}
-                                                    {% else %}
-                                                        <span class="text-muted">Jogador Não Encontrado</span>
-                                                    {% endif %}
+                                            <li class="list-group-item py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="position-relative">
+                                                            {% if golo.jogador and golo.jogador.imagem %}
+                                                                <img src="{{ golo.jogador.imagem }}" 
+                                                                     alt="{{ golo.jogador.nome }}"
+                                                                     class="rounded-circle"
+                                                                     style="width: 60px; height: 60px; object-fit: cover;">
+                                                            {% else %}
+                                                                <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                     style="width: 60px; height: 60px;">
+                                                                    <i class="bi bi-person fs-4"></i>
+                                                                </div>
+                                                            {% endif %}
+                                                            <span class="badge bg-primary position-absolute bottom-0 end-0">
+                                                                {{ golo.jogador.num_camisola|default:"?" }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="mb-1">
+                                                                    {% if golo.jogador %}
+                                                                        {{ golo.jogador.nome }}
+                                                                    {% else %}
+                                                                        <span class="text-muted">Jogador Não Encontrado</span>
+                                                                    {% endif %}
+                                                                </h6>
+                                                                <small class="text-muted">
+                                                                    <i class="bi bi-clock me-1"></i>
+                                                                    {{ golo.minuto }}'{% if golo.compensacao %}+{{ golo.compensacao }}'{% endif %}
+                                                                </small>
+                                                            </div>
+                                                            <div>
+                                                                {% if golo.penalti %}
+                                                                    <span class="badge bg-danger">
+                                                                        <i class="bi bi-flag me-1"></i>Penálti
+                                                                    </span>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                {% if golo.penalti %}
-                                                    <span class="badge bg-danger">
-                                                        <i class="bi bi-flag me-1"></i>Penálti
-                                                    </span>
-                                                {% endif %}
                                             </li>
                                         {% empty %}
                                             <li class="list-group-item text-center py-4 text-muted">
@@ -277,22 +306,51 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         {% for golo in golos_fora %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                                <div>
-                                                    <span class="badge bg-danger me-2">
-                                                        {{ golo.minuto }}'{% if golo.compensacao %}+{{ golo.compensacao }}'{% endif %}
-                                                    </span>
-                                                    {% if golo.jogador %}
-                                                        <strong>{{ golo.jogador.num_camisola }}.</strong> {{ golo.jogador.nome }}
-                                                    {% else %}
-                                                        <span class="text-muted">Jogador Não Encontrado</span>
-                                                    {% endif %}
+                                            <li class="list-group-item py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="position-relative">
+                                                            {% if golo.jogador and golo.jogador.imagem %}
+                                                                <img src="{{ golo.jogador.imagem }}" 
+                                                                     alt="{{ golo.jogador.nome }}"
+                                                                     class="rounded-circle"
+                                                                     style="width: 60px; height: 60px; object-fit: cover;">
+                                                            {% else %}
+                                                                <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                     style="width: 60px; height: 60px;">
+                                                                    <i class="bi bi-person fs-4"></i>
+                                                                </div>
+                                                            {% endif %}
+                                                            <span class="badge bg-danger position-absolute bottom-0 end-0">
+                                                                {{ golo.jogador.num_camisola|default:"?" }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="mb-1">
+                                                                    {% if golo.jogador %}
+                                                                        {{ golo.jogador.nome }}
+                                                                    {% else %}
+                                                                        <span class="text-muted">Jogador Não Encontrado</span>
+                                                                    {% endif %}
+                                                                </h6>
+                                                                <small class="text-muted">
+                                                                    <i class="bi bi-clock me-1"></i>
+                                                                    {{ golo.minuto }}'{% if golo.compensacao %}+{{ golo.compensacao }}'{% endif %}
+                                                                </small>
+                                                            </div>
+                                                            <div>
+                                                                {% if golo.penalti %}
+                                                                    <span class="badge bg-primary">
+                                                                        <i class="bi bi-flag me-1"></i>Penálti
+                                                                    </span>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                {% if golo.penalti %}
-                                                    <span class="badge bg-primary">
-                                                        <i class="bi bi-flag me-1"></i>Penálti
-                                                    </span>
-                                                {% endif %}
                                             </li>
                                         {% empty %}
                                             <li class="list-group-item text-center py-4 text-muted">
@@ -320,25 +378,54 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         {% for falta in faltas_casa %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                                <div>
-                                                    <span class="badge bg-warning me-2">
-                                                        {{ falta.minuto }}'{% if falta.compensacao %}+{{ falta.compensacao }}'{% endif %}
-                                                    </span>
-                                                    {% if falta.jogador %}
-                                                        <strong>{{ falta.jogador.num_camisola }}.</strong> {{ falta.jogador.nome }}
-                                                    {% else %}
-                                                        <span class="text-muted">Jogador Não Encontrado</span>
-                                                    {% endif %}
+                                            <li class="list-group-item py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="position-relative">
+                                                            {% if falta.jogador and falta.jogador.imagem %}
+                                                                <img src="{{ falta.jogador.imagem }}" 
+                                                                     alt="{{ falta.jogador.nome }}"
+                                                                     class="rounded-circle"
+                                                                     style="width: 60px; height: 60px; object-fit: cover;">
+                                                            {% else %}
+                                                                <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                     style="width: 60px; height: 60px;">
+                                                                    <i class="bi bi-person fs-4"></i>
+                                                                </div>
+                                                            {% endif %}
+                                                            <span class="badge bg-warning position-absolute bottom-0 end-0">
+                                                                {{ falta.jogador.num_camisola|default:"?" }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="mb-1">
+                                                                    {% if falta.jogador %}
+                                                                        {{ falta.jogador.nome }}
+                                                                    {% else %}
+                                                                        <span class="text-muted">Jogador Não Encontrado</span>
+                                                                    {% endif %}
+                                                                </h6>
+                                                                <small class="text-muted">
+                                                                    <i class="bi bi-clock me-1"></i>
+                                                                    {{ falta.minuto }}'{% if falta.compensacao %}+{{ falta.compensacao }}'{% endif %}
+                                                                </small>
+                                                            </div>
+                                                            <div>
+                                                                {% if falta.cartao %}
+                                                                    <span class="badge 
+                                                                        {% if falta.cartao_cor == 'Amarelo' %}bg-warning text-dark
+                                                                        {% elif falta.cartao_cor == 'Vermelho' %}bg-danger
+                                                                        {% else %}bg-secondary{% endif %}">
+                                                                        <i class="bi bi-card-text me-1"></i>{{ falta.cartao_cor }}
+                                                                    </span>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                {% if falta.cartao %}
-                                                    <span class="badge 
-                                                        {% if falta.cartao_cor == 'Amarelo' %}bg-warning text-dark
-                                                        {% elif falta.cartao_cor == 'Vermelho' %}bg-danger
-                                                        {% else %}bg-secondary{% endif %}">
-                                                        <i class="bi bi-card-text me-1"></i>{{ falta.cartao_cor }}
-                                                    </span>
-                                                {% endif %}
                                             </li>
                                         {% empty %}
                                             <li class="list-group-item text-center py-4 text-muted">
@@ -360,25 +447,54 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         {% for falta in faltas_fora %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                                <div>
-                                                    <span class="badge bg-warning me-2">
-                                                        {{ falta.minuto }}'{% if falta.compensacao %}+{{ falta.compensacao }}'{% endif %}
-                                                    </span>
-                                                    {% if falta.jogador %}
-                                                        <strong>{{ falta.jogador.num_camisola }}.</strong> {{ falta.jogador.nome }}
-                                                    {% else %}
-                                                        <span class="text-muted">Jogador Não Encontrado</span>
-                                                    {% endif %}
+                                            <li class="list-group-item py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="position-relative">
+                                                            {% if falta.jogador and falta.jogador.imagem %}
+                                                                <img src="{{ falta.jogador.imagem }}" 
+                                                                     alt="{{ falta.jogador.nome }}"
+                                                                     class="rounded-circle"
+                                                                     style="width: 60px; height: 60px; object-fit: cover;">
+                                                            {% else %}
+                                                                <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                     style="width: 60px; height: 60px;">
+                                                                    <i class="bi bi-person fs-4"></i>
+                                                                </div>
+                                                            {% endif %}
+                                                            <span class="badge bg-warning position-absolute bottom-0 end-0">
+                                                                {{ falta.jogador.num_camisola|default:"?" }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="mb-1">
+                                                                    {% if falta.jogador %}
+                                                                        {{ falta.jogador.nome }}
+                                                                    {% else %}
+                                                                        <span class="text-muted">Jogador Não Encontrado</span>
+                                                                    {% endif %}
+                                                                </h6>
+                                                                <small class="text-muted">
+                                                                    <i class="bi bi-clock me-1"></i>
+                                                                    {{ falta.minuto }}'{% if falta.compensacao %}+{{ falta.compensacao }}'{% endif %}
+                                                                </small>
+                                                            </div>
+                                                            <div>
+                                                                {% if falta.cartao %}
+                                                                    <span class="badge 
+                                                                        {% if falta.cartao_cor == 'Amarelo' %}bg-warning text-dark
+                                                                        {% elif falta.cartao_cor == 'Vermelho' %}bg-danger
+                                                                        {% else %}bg-secondary{% endif %}">
+                                                                        <i class="bi bi-card-text me-1"></i>{{ falta.cartao_cor }}
+                                                                    </span>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                {% if falta.cartao %}
-                                                    <span class="badge 
-                                                        {% if falta.cartao_cor == 'Amarelo' %}bg-warning text-dark
-                                                        {% elif falta.cartao_cor == 'Vermelho' %}bg-danger
-                                                        {% else %}bg-secondary{% endif %}">
-                                                        <i class="bi bi-card-text me-1"></i>{{ falta.cartao_cor }}
-                                                    </span>
-                                                {% endif %}
                                             </li>
                                         {% empty %}
                                             <li class="list-group-item text-center py-4 text-muted">
@@ -407,35 +523,83 @@
                                     <ul class="list-group list-group-flush">
                                         {% for substituicao in substituicoes_casa %}
                                             <li class="list-group-item py-3">
-                                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                                    <span class="badge bg-info">
+                                                <div class="text-center mb-3">
+                                                    <span class="badge bg-info px-3 py-2">
+                                                        <i class="bi bi-clock me-1"></i>
                                                         {{ substituicao.minuto }}'{% if substituicao.compensacao %}+{{ substituicao.compensacao }}'{% endif %}
                                                     </span>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row align-items-center">
+                                                    <!-- Jogador que Sai -->
                                                     <div class="col-6 text-center">
-                                                        <div class="text-success">
-                                                            <i class="bi bi-arrow-up-circle fs-5"></i>
-                                                            <div class="mt-1">
-                                                                <small class="d-block text-muted">Sai</small>
-                                                                {% if substituicao.jogador_sai %}
-                                                                    <strong>{{ substituicao.jogador_sai.num_camisola }}. {{ substituicao.jogador_sai.nome }}</strong>
+                                                        <div class="d-flex flex-column align-items-center">
+                                                            <div class="mb-2 position-relative">
+                                                                {% if substituicao.jogador_sai and substituicao.jogador_sai.imagem %}
+                                                                    <img src="{{ substituicao.jogador_sai.imagem }}" 
+                                                                         alt="{{ substituicao.jogador_sai.nome }}"
+                                                                         class="rounded-circle"
+                                                                         style="width: 80px; height: 80px; object-fit: cover;">
                                                                 {% else %}
-                                                                    <span class="text-muted">Não encontrado</span>
+                                                                    <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                         style="width: 80px; height: 80px;">
+                                                                        <i class="bi bi-person fs-3"></i>
+                                                                    </div>
                                                                 {% endif %}
+                                                                <span class="badge bg-danger position-absolute top-0 start-0">
+                                                                    {{ substituicao.jogador_sai.num_camisola|default:"?" }}
+                                                                </span>
+                                                            </div>
+                                                            <div class="text-danger">
+                                                                <i class="bi bi-arrow-up-circle fs-4 mb-1"></i>
+                                                                <div>
+                                                                    <small class="d-block text-muted">Sai</small>
+                                                                    {% if substituicao.jogador_sai %}
+                                                                        <strong>{{ substituicao.jogador_sai.nome }}</strong>
+                                                                    {% else %}
+                                                                        <span class="text-muted">Não encontrado</span>
+                                                                    {% endif %}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    
+                                                    <!-- Seta de Substituição -->
+                                                    <div class="col-12 d-md-none text-center my-3">
+                                                        <i class="bi bi-arrow-right fs-3 text-info"></i>
+                                                    </div>
+                                                    <div class="col-12 d-none d-md-block position-absolute top-50 start-50 translate-middle">
+                                                        <i class="bi bi-arrow-right fs-3 text-info"></i>
+                                                    </div>
+                                                    
+                                                    <!-- Jogador que Entra -->
                                                     <div class="col-6 text-center">
-                                                        <div class="text-danger">
-                                                            <i class="bi bi-arrow-down-circle fs-5"></i>
-                                                            <div class="mt-1">
-                                                                <small class="d-block text-muted">Entra</small>
-                                                                {% if substituicao.jogador_entra %}
-                                                                    <strong>{{ substituicao.jogador_entra.num_camisola }}. {{ substituicao.jogador_entra.nome }}</strong>
+                                                        <div class="d-flex flex-column align-items-center">
+                                                            <div class="mb-2 position-relative">
+                                                                {% if substituicao.jogador_entra and substituicao.jogador_entra.imagem %}
+                                                                    <img src="{{ substituicao.jogador_entra.imagem }}" 
+                                                                         alt="{{ substituicao.jogador_entra.nome }}"
+                                                                         class="rounded-circle"
+                                                                         style="width: 80px; height: 80px; object-fit: cover;">
                                                                 {% else %}
-                                                                    <span class="text-muted">Não encontrado</span>
+                                                                    <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                         style="width: 80px; height: 80px;">
+                                                                        <i class="bi bi-person fs-3"></i>
+                                                                    </div>
                                                                 {% endif %}
+                                                                <span class="badge bg-success position-absolute top-0 start-0">
+                                                                    {{ substituicao.jogador_entra.num_camisola|default:"?" }}
+                                                                </span>
+                                                            </div>
+                                                            <div class="text-success">
+                                                                <i class="bi bi-arrow-down-circle fs-4 mb-1"></i>
+                                                                <div>
+                                                                    <small class="d-block text-muted">Entra</small>
+                                                                    {% if substituicao.jogador_entra %}
+                                                                        <strong>{{ substituicao.jogador_entra.nome }}</strong>
+                                                                    {% else %}
+                                                                        <span class="text-muted">Não encontrado</span>
+                                                                    {% endif %}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -462,35 +626,83 @@
                                     <ul class="list-group list-group-flush">
                                         {% for substituicao in substituicoes_fora %}
                                             <li class="list-group-item py-3">
-                                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                                    <span class="badge bg-info">
+                                                <div class="text-center mb-3">
+                                                    <span class="badge bg-info px-3 py-2">
+                                                        <i class="bi bi-clock me-1"></i>
                                                         {{ substituicao.minuto }}'{% if substituicao.compensacao %}+{{ substituicao.compensacao }}'{% endif %}
                                                     </span>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row align-items-center position-relative">
+                                                    <!-- Jogador que Sai -->
                                                     <div class="col-6 text-center">
-                                                        <div class="text-success">
-                                                            <i class="bi bi-arrow-up-circle fs-5"></i>
-                                                            <div class="mt-1">
-                                                                <small class="d-block text-muted">Sai</small>
-                                                                {% if substituicao.jogador_sai %}
-                                                                    <strong>{{ substituicao.jogador_sai.num_camisola }}. {{ substituicao.jogador_sai.nome }}</strong>
+                                                        <div class="d-flex flex-column align-items-center">
+                                                            <div class="mb-2 position-relative">
+                                                                {% if substituicao.jogador_sai and substituicao.jogador_sai.imagem %}
+                                                                    <img src="{{ substituicao.jogador_sai.imagem }}" 
+                                                                         alt="{{ substituicao.jogador_sai.nome }}"
+                                                                         class="rounded-circle"
+                                                                         style="width: 80px; height: 80px; object-fit: cover;">
                                                                 {% else %}
-                                                                    <span class="text-muted">Não encontrado</span>
+                                                                    <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                         style="width: 80px; height: 80px;">
+                                                                        <i class="bi bi-person fs-3"></i>
+                                                                    </div>
                                                                 {% endif %}
+                                                                <span class="badge bg-danger position-absolute top-0 start-0">
+                                                                    {{ substituicao.jogador_sai.num_camisola|default:"?" }}
+                                                                </span>
+                                                            </div>
+                                                            <div class="text-danger">
+                                                                <i class="bi bi-arrow-up-circle fs-4 mb-1"></i>
+                                                                <div>
+                                                                    <small class="d-block text-muted">Sai</small>
+                                                                    {% if substituicao.jogador_sai %}
+                                                                        <strong>{{ substituicao.jogador_sai.nome }}</strong>
+                                                                    {% else %}
+                                                                        <span class="text-muted">Não encontrado</span>
+                                                                    {% endif %}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    
+                                                    <!-- Seta de Substituição -->
+                                                    <div class="col-12 d-md-none text-center my-3">
+                                                        <i class="bi bi-arrow-right fs-3 text-info"></i>
+                                                    </div>
+                                                    <div class="col-12 d-none d-md-block position-absolute top-50 start-50 translate-middle">
+                                                        <i class="bi bi-arrow-right fs-3 text-info"></i>
+                                                    </div>
+                                                    
+                                                    <!-- Jogador que Entra -->
                                                     <div class="col-6 text-center">
-                                                        <div class="text-danger">
-                                                            <i class="bi bi-arrow-down-circle fs-5"></i>
-                                                            <div class="mt-1">
-                                                                <small class="d-block text-muted">Entra</small>
-                                                                {% if substituicao.jogador_entra %}
-                                                                    <strong>{{ substituicao.jogador_entra.num_camisola }}. {{ substituicao.jogador_entra.nome }}</strong>
+                                                        <div class="d-flex flex-column align-items-center">
+                                                            <div class="mb-2 position-relative">
+                                                                {% if substituicao.jogador_entra and substituicao.jogador_entra.imagem %}
+                                                                    <img src="{{ substituicao.jogador_entra.imagem }}" 
+                                                                         alt="{{ substituicao.jogador_entra.nome }}"
+                                                                         class="rounded-circle"
+                                                                         style="width: 80px; height: 80px; object-fit: cover;">
                                                                 {% else %}
-                                                                    <span class="text-muted">Não encontrado</span>
+                                                                    <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                         style="width: 80px; height: 80px;">
+                                                                        <i class="bi bi-person fs-3"></i>
+                                                                    </div>
                                                                 {% endif %}
+                                                                <span class="badge bg-success position-absolute top-0 start-0">
+                                                                    {{ substituicao.jogador_entra.num_camisola|default:"?" }}
+                                                                </span>
+                                                            </div>
+                                                            <div class="text-success">
+                                                                <i class="bi bi-arrow-down-circle fs-4 mb-1"></i>
+                                                                <div>
+                                                                    <small class="d-block text-muted">Entra</small>
+                                                                    {% if substituicao.jogador_entra %}
+                                                                        <strong>{{ substituicao.jogador_entra.nome }}</strong>
+                                                                    {% else %}
+                                                                        <span class="text-muted">Não encontrado</span>
+                                                                    {% endif %}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -522,21 +734,49 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         {% for penalti in penaltis_casa %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                                <div>
-                                                    {% if penalti.jogador %}
-                                                        <strong>{{ penalti.jogador.num_camisola }}.</strong> {{ penalti.jogador.nome }}
-                                                    {% else %}
-                                                        <span class="text-muted">Jogador Não Encontrado</span>
-                                                    {% endif %}
+                                            <li class="list-group-item py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="position-relative">
+                                                            {% if penalti.jogador and penalti.jogador.imagem %}
+                                                                <img src="{{ penalti.jogador.imagem }}" 
+                                                                     alt="{{ penalti.jogador.nome }}"
+                                                                     class="rounded-circle"
+                                                                     style="width: 60px; height: 60px; object-fit: cover;">
+                                                            {% else %}
+                                                                <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                     style="width: 60px; height: 60px;">
+                                                                    <i class="bi bi-person fs-4"></i>
+                                                                </div>
+                                                            {% endif %}
+                                                            <span class="badge bg-danger position-absolute bottom-0 end-0">
+                                                                {{ penalti.jogador.num_camisola|default:"?" }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="mb-1">
+                                                                    {% if penalti.jogador %}
+                                                                        {{ penalti.jogador.nome }}
+                                                                    {% else %}
+                                                                        <span class="text-muted">Jogador Não Encontrado</span>
+                                                                    {% endif %}
+                                                                </h6>
+                                                            </div>
+                                                            <div>
+                                                                <span class="badge {% if penalti.golo %}bg-success{% else %}bg-danger{% endif %} px-3 py-2">
+                                                                    {% if penalti.golo %}
+                                                                        <i class="bi bi-check-circle me-1"></i>Golo
+                                                                    {% else %}
+                                                                        <i class="bi bi-x-circle me-1"></i>Falhado
+                                                                    {% endif %}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <span class="badge {% if penalti.golo %}bg-success{% else %}bg-danger{% endif %}">
-                                                    {% if penalti.golo %}
-                                                        <i class="bi bi-check-circle me-1"></i>Golo
-                                                    {% else %}
-                                                        <i class="bi bi-x-circle me-1"></i>Falhado
-                                                    {% endif %}
-                                                </span>
                                             </li>
                                         {% empty %}
                                             <li class="list-group-item text-center py-4 text-muted">
@@ -558,21 +798,49 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         {% for penalti in penaltis_fora %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                                <div>
-                                                    {% if penalti.jogador %}
-                                                        <strong>{{ penalti.jogador.num_camisola }}.</strong> {{ penalti.jogador.nome }}
-                                                    {% else %}
-                                                        <span class="text-muted">Jogador Não Encontrado</span>
-                                                    {% endif %}
+                                            <li class="list-group-item py-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="position-relative">
+                                                            {% if penalti.jogador and penalti.jogador.imagem %}
+                                                                <img src="{{ penalti.jogador.imagem }}" 
+                                                                     alt="{{ penalti.jogador.nome }}"
+                                                                     class="rounded-circle"
+                                                                     style="width: 60px; height: 60px; object-fit: cover;">
+                                                            {% else %}
+                                                                <div class="rounded-circle bg-secondary text-light d-flex align-items-center justify-content-center"
+                                                                     style="width: 60px; height: 60px;">
+                                                                    <i class="bi bi-person fs-4"></i>
+                                                                </div>
+                                                            {% endif %}
+                                                            <span class="badge bg-danger position-absolute bottom-0 end-0">
+                                                                {{ penalti.jogador.num_camisola|default:"?" }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="mb-1">
+                                                                    {% if penalti.jogador %}
+                                                                        {{ penalti.jogador.nome }}
+                                                                    {% else %}
+                                                                        <span class="text-muted">Jogador Não Encontrado</span>
+                                                                    {% endif %}
+                                                                </h6>
+                                                            </div>
+                                                            <div>
+                                                                <span class="badge {% if penalti.golo %}bg-success{% else %}bg-danger{% endif %} px-3 py-2">
+                                                                    {% if penalti.golo %}
+                                                                        <i class="bi bi-check-circle me-1"></i>Golo
+                                                                    {% else %}
+                                                                        <i class="bi bi-x-circle me-1"></i>Falhado
+                                                                    {% endif %}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <span class="badge {% if penalti.golo %}bg-success{% else %}bg-danger{% endif %}">
-                                                    {% if penalti.golo %}
-                                                        <i class="bi bi-check-circle me-1"></i>Golo
-                                                    {% else %}
-                                                        <i class="bi bi-x-circle me-1"></i>Falhado
-                                                    {% endif %}
-                                                </span>
                                             </li>
                                         {% empty %}
                                             <li class="list-group-item text-center py-4 text-muted">
@@ -671,6 +939,22 @@
         background-color: rgba(102, 126, 234, 0.05);
     }
     
+    /* Imagem dos jogadores com número */
+    .position-relative .badge {
+        font-size: 0.7rem;
+        padding: 2px 5px;
+        min-width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Substituições - layout especial */
+    .position-absolute.start-50 {
+        z-index: 1;
+    }
+    
     /* Responsividade */
     @media (max-width: 768px) {
         .card-body {
@@ -693,6 +977,16 @@
         .col-md-6 {
             margin-bottom: 1.5rem;
         }
+        
+        /* Ajustes para imagens em mobile */
+        .list-group-item .rounded-circle {
+            width: 50px !important;
+            height: 50px !important;
+        }
+        
+        .list-group-item h6 {
+            font-size: 0.9rem;
+        }
     }
     
     @media (max-width: 576px) {
@@ -707,6 +1001,26 @@
         .nav-tabs .nav-item {
             width: 100%;
         }
+        
+        /* Substituições em mobile */
+        .col-6 .rounded-circle {
+            width: 60px !important;
+            height: 60px !important;
+        }
+        
+        .position-absolute.start-50 {
+            display: none !important;
+        }
+        
+        .col-12.d-md-none {
+            display: block !important;
+        }
     }
 </style>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 {% endblock %}

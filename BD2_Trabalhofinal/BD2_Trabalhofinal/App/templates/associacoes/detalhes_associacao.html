@@ -8,9 +8,10 @@
     <div class="card shadow-lg border-0 mb-4 overflow-hidden">
         <div class="card-header py-3" style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
             <div class="d-flex align-items-center">
-                <a href="{% url 'listar_associacoes' %}" class="btn btn-outline-light me-3">
+                <!-- Botão de voltar dinâmico -->
+                <button onclick="goBack()" class="btn btn-outline-light me-3">
                     <i class="bi bi-arrow-left"></i>
-                </a>
+                </button>
                 <h3 class="mb-0 text-white">
                     <i class="bi bi-building me-2"></i>
                     Detalhes da Associação
@@ -281,4 +282,21 @@
         }
     }
 </style>
+
+<script>
+    // Função para voltar à página anterior
+    function goBack() {
+        window.history.back();
+    }
+    
+    // Alternativa: Se quiseres que o botão seja um link normal mas com fallback
+    document.addEventListener('DOMContentLoaded', function() {
+        // Podes adicionar um atributo data-back-url se necessário
+        const backButton = document.querySelector('.btn-outline-light');
+        backButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            goBack();
+        });
+    });
+</script>
 {% endblock %}

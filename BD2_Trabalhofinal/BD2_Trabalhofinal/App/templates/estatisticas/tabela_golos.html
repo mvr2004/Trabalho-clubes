@@ -1,12 +1,12 @@
-{% block faltas_table %}
+{% block golos_table %}
 <div class="table-responsive">
     <table class="table table-hover mb-0">
         <thead style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
             <tr>
                 <th class="text-white border-0">Clube</th>
                 <th class="text-white border-0">Jogador</th>
-                <th class="text-white border-0">Cartão</th>
                 <th class="text-white border-0">Minuto</th>
+                <th class="text-white border-0">Pênalti</th>
                 <th class="text-white border-0">Ações</th>
             </tr>
         </thead>
@@ -48,27 +48,6 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if estatistica.cartao %}
-                        {% if estatistica.cartao_cor == "Amarelo" %}
-                        <span class="badge bg-warning text-dark">
-                            <i class="bi bi-square-fill me-1"></i>Amarelo
-                        </span>
-                        {% elif estatistica.cartao_cor == "Vermelho" %}
-                        <span class="badge bg-danger">
-                            <i class="bi bi-square-fill me-1"></i>Vermelho
-                        </span>
-                        {% else %}
-                        <span class="badge bg-secondary">
-                            <i class="bi bi-square me-1"></i>{{ estatistica.cartao_cor }}
-                        </span>
-                        {% endif %}
-                    {% else %}
-                    <span class="badge bg-light text-dark">
-                        <i class="bi bi-dash-circle me-1"></i>Não
-                    </span>
-                    {% endif %}
-                </td>
-                <td>
                     <span class="badge bg-primary px-3 py-2">
                         <i class="bi bi-clock me-1"></i>
                         {{ estatistica.minuto }}
@@ -78,8 +57,19 @@
                     </span>
                 </td>
                 <td>
+                    {% if estatistica.penalti %}
+                    <span class="badge bg-danger">
+                        <i class="bi bi-flag me-1"></i>Pênalti
+                    </span>
+                    {% else %}
+                    <span class="badge bg-success">
+                        <i class="bi bi-bullseye me-1"></i>Jogo Corrente
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
                     <div class="btn-group" role="group">
-                        <a href="{% url 'editar_falta' estatistica.get_id %}" class="btn btn-warning btn-sm me-1">
+                        <a href="{% url 'editar_golo' estatistica.get_id %}" class="btn btn-warning btn-sm me-1">
                             <i class="bi bi-pencil"></i>
                         </a>
                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" 
@@ -101,7 +91,7 @@
                                             data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    Tem certeza de que deseja apagar a falta realizada por 
+                                    Tem certeza de que deseja apagar o golo marcado por 
                                     <strong class="text-danger">
                                         {% if estatistica.jogador %}
                                             {{ estatistica.jogador.nome }}
@@ -120,7 +110,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <form method="post" action="{% url 'apagar_falta' estatistica.get_id %}">
+                                    <form method="post" action="{% url 'apagar_golo' estatistica.get_id %}">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-danger">
                                             <i class="bi bi-trash me-1"></i>Apagar
@@ -169,7 +159,7 @@
     
     /* Hover nas linhas da tabela */
     .table-hover tbody tr:hover {
-        background-color: rgba(255, 193, 7, 0.05);
+        background-color: rgba(40, 167, 69, 0.05);
         transform: scale(1.001);
         transition: all 0.2s ease;
     }
