@@ -4,96 +4,308 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center">Lista de Estádios</h1>
+    <h1 class="text-center mb-4">Lista de Estádios</h1>
 
     <!-- Barra de Pesquisa -->
-    <div class="mb-3">
-        <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar estádio..." onkeyup="filtrarEstadios()">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-3">
+            <div class="input-group">
+                <span class="input-group-text bg-primary text-white border-0">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control border-0" 
+                       placeholder="Pesquisar estádio..." onkeyup="filtrarEstadios()">
+            </div>
+        </div>
     </div>
 
-    <div class="text-end mb-3">
-        <a href="{% url 'adicionar_estadio' %}" class="btn btn-primary">Adicionar Estádio</a>
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{% url 'adicionar_estadio' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Adicionar Estádio
+        </a>
     </div>
 
     {% if estadios %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Nome</th>
-                    <th>Localidade</th>
-                    <th>Dados</th>
-                    <th>Estado</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="estadiosTabela">
-                {% for estadio in estadios %}
-                <tr class="estadio-item">
-                    <td>
-                        {{ estadio.nome }}
-                    </td>
-                    <td>
-                        {{ estadio.pais}}, {{ estadio.cidade }}
-                    </td>
-                    <td>
-                        Inauguração: {{ estadio.inauguracao }}
-                        <br>
-                        Lotação:
-                        {% if estadio.lotacao %}
-                            {{ estadio.lotacao }}
-                        {% else %}
-                            Não Disponível
-                        {% endif %}
-                    </td>
-                    <td>{{ estadio.estado }}</td>
-                    <td>
-                        <a href="{% url 'detalhes_estadio' estadio.get_id %}" class="btn btn-info btn-sm me-2">Ver</a>
-                        <a href="{% url 'editar_estadio' estadio.get_id %}" class="btn btn-warning btn-sm me-2">Editar</a>
-                        <!-- Botão para abrir o modal -->
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ estadio.get_id }}">
-                            Apagar
-                        </button>
-                        
-                        <!-- Modal -->
-                        <div class="modal fade" id="deleteModal{{ estadio.get_id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ estadio.get_id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title" id="deleteModalLabel{{ estadio.get_id }}">Confirmar Exclusão</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Tem certeza de que deseja apagar este Estádio <strong>({{ estadio.nome }})</strong>?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form method="post" action="{% url 'apagar_estadio' estadio.get_id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Apagar</button>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        </form>
+    <div class="card shadow border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);">
+                        <tr>
+                            <th class="text-white border-0">Nome</th>
+                            <th class="text-white border-0">Localidade</th>
+                            <th class="text-white border-0">Dados</th>
+                            <th class="text-white border-0">Estado</th>
+                            <th class="text-white border-0">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="estadiosTabela">
+                        {% for estadio in estadios %}
+                        <tr class="estadio-item align-middle">
+                            <td class="fw-bold">{{ estadio.nome }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-geo-alt text-primary me-2"></i>
+                                    {{ estadio.cidade }}, {{ estadio.pais }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    {% if estadio.inauguracao %}
+                                    <small class="text-muted">Inauguração</small>
+                                    <strong>{{ estadio.inauguracao|date:"d/m/Y" }}</strong>
+                                    {% endif %}
+                                    
+                                    <small class="text-muted mt-2">Lotação</small>
+                                    {% if estadio.lotacao %}
+                                    <strong>{{ estadio.lotacao|floatformat:"0" }} lugares</strong>
+                                    {% else %}
+                                    <span class="text-muted">Não Disponível</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                {% if estadio.estado == "Ativo" %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>Ativo
+                                    </span>
+                                {% elif estadio.estado == "Demolido" %}
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-x-circle me-1"></i>Demolido
+                                    </span>
+                                {% elif estadio.estado == "Em Obras" %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-tools me-1"></i>Em Obras
+                                    </span>
+                                {% elif estadio.estado == "Fechado" %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-lock me-1"></i>Fechado
+                                    </span>
+                                {% elif estadio.estado == "Reforma" %}
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-hammer me-1"></i>Reforma
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-primary">
+                                        <i class="bi bi-question-circle me-1"></i>{{ estadio.estado }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'detalhes_estadio' estadio.get_id %}" class="btn btn-info btn-sm me-1">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'editar_estadio' estadio.get_id %}" class="btn btn-warning btn-sm me-1">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal{{ estadio.get_id }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Modal de Exclusão -->
+                                <div class="modal fade" id="deleteModal{{ estadio.get_id }}" tabindex="-1" 
+                                     aria-labelledby="deleteModalLabel{{ estadio.get_id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content border-0 shadow">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ estadio.get_id }}">
+                                                    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Exclusão
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" 
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Tem certeza de que deseja apagar este Estádio 
+                                                <strong class="text-danger">{{ estadio.nome }}</strong>?
+                                                <div class="alert alert-warning mt-3 mb-0 p-2">
+                                                    <small><i class="bi bi-info-circle me-1"></i>
+                                                    Esta ação não pode ser desfeita.</small>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form method="post" action="{% url 'apagar_estadio' estadio.get_id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="bi bi-trash me-1"></i>Apagar
+                                                    </button>
+                                                    <button type="button" class="btn btn-secondary" 
+                                                            data-bs-dismiss="modal">Cancelar</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     {% else %}
-    <div class="alert alert-info text-center">
-        Nenhuma associação encontrada.
+    <div class="card shadow border-0">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-stadium text-muted" style="font-size: 3rem;"></i>
+            <h4 class="text-muted mt-3">Nenhum estádio encontrado</h4>
+            <p class="text-muted mb-4">Não existem estádios registrados no momento.</p>
+            <a href="{% url 'adicionar_estadio' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Adicionar Primeiro Estádio
+            </a>
+        </div>
     </div>
     {% endif %}
 </div>
 
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    .container {
+        max-width: 1200px;
+    }
+    
+    h1 {
+        font-weight: 700;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .card {
+        border-radius: 15px;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        font-weight: 600;
+        padding: 1rem;
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 8px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-info, .btn-warning, .btn-danger {
+        border-radius: 8px;
+        padding: 6px 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-info:hover, .btn-warning:hover, .btn-danger:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+    
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .badge {
+        font-weight: 500;
+        padding: 5px 10px;
+    }
+    
+    .modal-content {
+        border-radius: 15px;
+    }
+    
+    .modal-header {
+        border-radius: 15px 15px 0 0;
+    }
+    
+    /* Barra de pesquisa */
+    .input-group-text {
+        border-radius: 10px 0 0 10px;
+    }
+    
+    .form-control {
+        border-radius: 0 10px 10px 0;
+    }
+    
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #667eea;
+    }
+    
+    /* Hover nas linhas da tabela */
+    .table-hover tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.05);
+        transform: scale(1.001);
+        transition: all 0.2s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .table-responsive {
+            border: none;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+        
+        .btn-sm {
+            padding: 5px 8px;
+            font-size: 0.8rem;
+        }
+        
+        .table td, .table th {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .d-flex.justify-content-end {
+            justify-content: center !important;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
 
-<!-- Script para filtrar estádios -->
 <script>
 function filtrarEstadios() {
     let input = document.getElementById('searchInput').value.toLowerCase();
@@ -110,29 +322,4 @@ function filtrarEstadios() {
     });
 }
 </script>
-
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
